@@ -68,7 +68,7 @@ export default function SearchBar({ onSearch, isLoading }: SearchBarProps) {
                 className={`
           relative flex items-end
           glass rounded-2xl
-          px-6 py-4
+          px-4 py-3
           transition-all duration-500 ease-out
           cursor-text
           ${isFocused ? "glow-gold shadow-2xl" : "shadow-lg"}
