@@ -3,6 +3,7 @@
 import { useEffect, useRef } from "react";
 import { motion } from "framer-motion";
 import { User, Bot, Sparkles } from "lucide-react";
+import ReactMarkdown from "react-markdown";
 
 export interface ChatMessage {
     id: string;
@@ -68,9 +69,15 @@ export default function ChatHistory({ messages, isThinking }: ChatHistoryProps) 
                         <p className="text-xs text-nebula-gray mb-1">
                             {message.role === "user" ? "You" : "MUAZ WRAPPED IT"}
                         </p>
-                        <p className="text-star-white whitespace-pre-wrap break-words">
-                            {message.content}
-                        </p>
+                        {message.role === "user" ? (
+                            <p className="text-star-white whitespace-pre-wrap break-words">
+                                {message.content}
+                            </p>
+                        ) : (
+                            <div className="text-star-white prose prose-invert max-w-none prose-p:my-2 prose-ul:my-2 prose-ol:my-2 prose-li:my-0.5 prose-strong:text-cosmic-gold prose-code:text-cosmic-gold-light prose-code:bg-midnight-blue prose-code:px-1 prose-code:py-0.5 prose-code:rounded prose-pre:bg-midnight-blue prose-pre:border prose-pre:border-white/10">
+                                <ReactMarkdown>{message.content}</ReactMarkdown>
+                            </div>
+                        )}
                     </div>
                 </motion.div>
             ))}
