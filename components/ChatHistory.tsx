@@ -41,50 +41,54 @@ export default function ChatHistory({ messages, isThinking }: ChatHistoryProps) 
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.3, delay: Math.min(index * 0.05, 0.3) }}
-                    className={`flex flex-col ${message.role === "user" ? "items-end" : "items-start"}`}
+                    className={`flex ${message.role === "user" ? "justify-end" : "justify-start"}`}
                 >
-                    {/* Subtle label above bubble */}
-                    <span className="text-[10px] text-nebula-gray/60 mb-1 px-2">
-                        {message.role === "user" ? "You" : "MUAZ WRAPPED IT"}
-                    </span>
-
-                    {/* Message row */}
+                    {/* Message row: Avatar Column + Bubble */}
                     <div
                         className={`
-                            flex gap-3 items-start
+                            flex gap-4 items-start max-w-[85%]
                             ${message.role === "user" ? "flex-row-reverse" : ""}
                         `}
                     >
-                        {/* Avatar */}
-                        <div
-                            className={`
-                                flex-shrink-0 w-8 h-8 rounded-full 
-                                flex items-center justify-center mt-1
-                                ${message.role === "user"
-                                    ? "bg-cosmic-gold/20 text-cosmic-gold"
-                                    : "bg-midnight-blue/80 text-star-white border border-white/10"
-                                }
-                            `}
-                        >
-                            {message.role === "user" ? (
-                                <User className="w-4 h-4" />
-                            ) : (
-                                <Bot className="w-4 h-4" />
-                            )}
+                        {/* Avatar Column: Label + Icon */}
+                        <div className="flex flex-col items-center flex-shrink-0 mt-1">
+                            <span className="text-[10px] text-nebula-gray/70 mb-1">
+                                {message.role === "user" ? "You" : "MUAZ"}
+                            </span>
+                            <div
+                                className={`
+                                    w-8 h-8 rounded-full
+                                    flex items-center justify-center
+                                    ${message.role === "user"
+                                        ? "bg-cosmic-gold/20 text-cosmic-gold"
+                                        : "bg-midnight-blue/80 text-star-white border border-white/10"
+                                    }
+                                `}
+                            >
+                                {message.role === "user" ? (
+                                    <User className="w-4 h-4" />
+                                ) : (
+                                    <Bot className="w-4 h-4" />
+                                )}
+                            </div>
                         </div>
 
                         {/* Message bubble */}
                         <div
                             className={`
-                                px-4 py-3 rounded-2xl
+                                px-4 py-3 rounded-2xl flex-shrink mt-4
                                 ${message.role === "user"
-                                    ? "glass-light w-fit max-w-[75%]"
-                                    : "glass max-w-[85%]"
+                                    ? "glass-light"
+                                    : "glass"
                                 }
                             `}
+                            style={message.role === "user" ? { minWidth: "min-content" } : undefined}
                         >
                             {message.role === "user" ? (
-                                <p className="text-star-white whitespace-pre-wrap break-words text-[15px]">
+                                <p
+                                    className="text-star-white text-[15px]"
+                                    style={{ textWrap: "balance", overflowWrap: "break-word" }}
+                                >
                                     {message.content}
                                 </p>
                             ) : (
@@ -102,16 +106,17 @@ export default function ChatHistory({ messages, isThinking }: ChatHistoryProps) 
                 <motion.div
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
-                    className="flex flex-col items-start"
+                    className="flex justify-start"
                 >
-                    <span className="text-[10px] text-nebula-gray/60 mb-1 px-2">
-                        MUAZ WRAPPED IT
-                    </span>
-                    <div className="flex gap-3 items-start">
-                        <div className="flex-shrink-0 w-8 h-8 rounded-full bg-midnight-blue/80 text-star-white border border-white/10 flex items-center justify-center mt-1">
-                            <Sparkles className="w-4 h-4 animate-pulse" />
+                    <div className="flex gap-4 items-start">
+                        {/* Avatar Column: Label + Icon */}
+                        <div className="flex flex-col items-center flex-shrink-0 mt-1">
+                            <span className="text-[10px] text-nebula-gray/70 mb-1">MUAZ</span>
+                            <div className="w-8 h-8 rounded-full bg-midnight-blue/80 text-star-white border border-white/10 flex items-center justify-center">
+                                <Sparkles className="w-4 h-4 animate-pulse" />
+                            </div>
                         </div>
-                        <div className="glass px-4 py-3 rounded-2xl">
+                        <div className="glass px-4 py-3 rounded-2xl mt-4">
                             <div className="flex items-center gap-2">
                                 <span className="text-nebula-gray text-sm">Thinking</span>
                                 <span className="flex gap-1">
