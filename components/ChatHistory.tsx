@@ -33,51 +33,66 @@ export default function ChatHistory({ messages, isThinking }: ChatHistoryProps) 
         <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
-            className="w-full max-w-3xl mx-auto mt-12 space-y-4"
+            className="w-full max-w-3xl mx-auto mt-12 space-y-6 pb-32"
         >
             {messages.map((message, index) => (
                 <motion.div
                     key={message.id}
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.3, delay: index * 0.1 }}
-                    className={`
-            flex gap-4 p-4 rounded-2xl max-w-[85%]
-            ${message.role === "user"
-                            ? "glass-light ml-auto flex-row-reverse"
-                            : "glass mr-auto"
-                        }
-          `}
+                    transition={{ duration: 0.3, delay: Math.min(index * 0.05, 0.3) }}
+                    className={`flex flex-col ${message.role === "user" ? "items-end" : "items-start"}`}
                 >
+                    {/* Subtle label above bubble */}
+                    <span className="text-[10px] text-nebula-gray/60 mb-1 px-2">
+                        {message.role === "user" ? "You" : "MUAZ WRAPPED IT"}
+                    </span>
+
+                    {/* Message row */}
                     <div
                         className={`
-              flex-shrink-0 w-10 h-10 rounded-full 
-              flex items-center justify-center
-              ${message.role === "user"
-                                ? "bg-cosmic-gold/20 text-cosmic-gold"
-                                : "bg-midnight-blue text-star-white"
-                            }
-            `}
+                            flex gap-3 items-start
+                            ${message.role === "user" ? "flex-row-reverse" : ""}
+                        `}
                     >
-                        {message.role === "user" ? (
-                            <User className="w-5 h-5" />
-                        ) : (
-                            <Bot className="w-5 h-5" />
-                        )}
-                    </div>
-                    <div className={`flex-1 min-w-0 ${message.role === "user" ? "text-right" : ""}`}>
-                        <p className="text-xs text-nebula-gray mb-1">
-                            {message.role === "user" ? "You" : "MUAZ WRAPPED IT"}
-                        </p>
-                        {message.role === "user" ? (
-                            <p className="text-star-white whitespace-pre-wrap break-words">
-                                {message.content}
-                            </p>
-                        ) : (
-                            <div className="text-star-white prose prose-invert max-w-none prose-p:my-2 prose-ul:my-2 prose-ol:my-2 prose-li:my-0.5 prose-strong:text-cosmic-gold prose-code:text-cosmic-gold-light prose-code:bg-midnight-blue prose-code:px-1 prose-code:py-0.5 prose-code:rounded prose-pre:bg-midnight-blue prose-pre:border prose-pre:border-white/10">
-                                <ReactMarkdown>{message.content}</ReactMarkdown>
-                            </div>
-                        )}
+                        {/* Avatar */}
+                        <div
+                            className={`
+                                flex-shrink-0 w-8 h-8 rounded-full 
+                                flex items-center justify-center mt-1
+                                ${message.role === "user"
+                                    ? "bg-cosmic-gold/20 text-cosmic-gold"
+                                    : "bg-midnight-blue/80 text-star-white border border-white/10"
+                                }
+                            `}
+                        >
+                            {message.role === "user" ? (
+                                <User className="w-4 h-4" />
+                            ) : (
+                                <Bot className="w-4 h-4" />
+                            )}
+                        </div>
+
+                        {/* Message bubble */}
+                        <div
+                            className={`
+                                px-4 py-3 rounded-2xl
+                                ${message.role === "user"
+                                    ? "glass-light w-fit max-w-[75%]"
+                                    : "glass max-w-[85%]"
+                                }
+                            `}
+                        >
+                            {message.role === "user" ? (
+                                <p className="text-star-white whitespace-pre-wrap break-words text-[15px]">
+                                    {message.content}
+                                </p>
+                            ) : (
+                                <div className="text-star-white prose prose-invert max-w-none prose-sm prose-p:my-2 prose-ul:my-2 prose-ol:my-2 prose-li:my-0.5 prose-strong:text-cosmic-gold prose-code:text-cosmic-gold-light prose-code:bg-midnight-blue prose-code:px-1 prose-code:py-0.5 prose-code:rounded prose-pre:bg-midnight-blue prose-pre:border prose-pre:border-white/10">
+                                    <ReactMarkdown>{message.content}</ReactMarkdown>
+                                </div>
+                            )}
+                        </div>
                     </div>
                 </motion.div>
             ))}
@@ -87,32 +102,36 @@ export default function ChatHistory({ messages, isThinking }: ChatHistoryProps) 
                 <motion.div
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
-                    className="flex gap-4 p-4 rounded-2xl glass"
+                    className="flex flex-col items-start"
                 >
-                    <div className="flex-shrink-0 w-10 h-10 rounded-full bg-midnight-blue text-star-white flex items-center justify-center">
-                        <Sparkles className="w-5 h-5 animate-pulse" />
-                    </div>
-                    <div className="flex-1">
-                        <p className="text-xs text-nebula-gray mb-1">MUAZ WRAPPED IT</p>
-                        <div className="flex items-center gap-2">
-                            <span className="text-nebula-gray">Thinking</span>
-                            <span className="flex gap-1">
-                                <motion.span
-                                    animate={{ opacity: [0.3, 1, 0.3] }}
-                                    transition={{ duration: 1, repeat: Infinity, delay: 0 }}
-                                    className="w-1.5 h-1.5 bg-cosmic-gold rounded-full"
-                                />
-                                <motion.span
-                                    animate={{ opacity: [0.3, 1, 0.3] }}
-                                    transition={{ duration: 1, repeat: Infinity, delay: 0.2 }}
-                                    className="w-1.5 h-1.5 bg-cosmic-gold rounded-full"
-                                />
-                                <motion.span
-                                    animate={{ opacity: [0.3, 1, 0.3] }}
-                                    transition={{ duration: 1, repeat: Infinity, delay: 0.4 }}
-                                    className="w-1.5 h-1.5 bg-cosmic-gold rounded-full"
-                                />
-                            </span>
+                    <span className="text-[10px] text-nebula-gray/60 mb-1 px-2">
+                        MUAZ WRAPPED IT
+                    </span>
+                    <div className="flex gap-3 items-start">
+                        <div className="flex-shrink-0 w-8 h-8 rounded-full bg-midnight-blue/80 text-star-white border border-white/10 flex items-center justify-center mt-1">
+                            <Sparkles className="w-4 h-4 animate-pulse" />
+                        </div>
+                        <div className="glass px-4 py-3 rounded-2xl">
+                            <div className="flex items-center gap-2">
+                                <span className="text-nebula-gray text-sm">Thinking</span>
+                                <span className="flex gap-1">
+                                    <motion.span
+                                        animate={{ opacity: [0.3, 1, 0.3] }}
+                                        transition={{ duration: 1, repeat: Infinity, delay: 0 }}
+                                        className="w-1.5 h-1.5 bg-cosmic-gold rounded-full"
+                                    />
+                                    <motion.span
+                                        animate={{ opacity: [0.3, 1, 0.3] }}
+                                        transition={{ duration: 1, repeat: Infinity, delay: 0.2 }}
+                                        className="w-1.5 h-1.5 bg-cosmic-gold rounded-full"
+                                    />
+                                    <motion.span
+                                        animate={{ opacity: [0.3, 1, 0.3] }}
+                                        transition={{ duration: 1, repeat: Infinity, delay: 0.4 }}
+                                        className="w-1.5 h-1.5 bg-cosmic-gold rounded-full"
+                                    />
+                                </span>
+                            </div>
                         </div>
                     </div>
                 </motion.div>
