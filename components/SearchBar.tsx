@@ -12,33 +12,47 @@ interface SearchBarProps {
 export default function SearchBar({ onSearch, isLoading }: SearchBarProps) {
     const [query, setQuery] = useState("");
     const [isFocused, setIsFocused] = useState(false);
-    const inputRef = useRef<HTMLInputElement>(null);
+    const textareaRef = useRef<HTMLTextAreaElement>(null);
     const wasLoadingRef = useRef(false);
 
     // Auto-focus input when loading completes
     useEffect(() => {
         if (wasLoadingRef.current && !isLoading) {
-            inputRef.current?.focus();
+            textareaRef.current?.focus();
         }
         wasLoadingRef.current = isLoading;
     }, [isLoading]);
+
+    // Auto-grow textarea
+    useEffect(() => {
+        const textarea = textareaRef.current;
+        if (textarea) {
+            textarea.style.height = "auto";
+            textarea.style.height = `${Math.min(textarea.scrollHeight, 200)}px`;
+        }
+    }, [query]);
 
     const handleSubmit = (e: FormEvent) => {
         e.preventDefault();
         if (query.trim() && !isLoading) {
             onSearch(query.trim());
             setQuery("");
+            // Reset textarea height
+            if (textareaRef.current) {
+                textareaRef.current.style.height = "auto";
+            }
         }
     };
 
-    const handleKeyDown = (e: KeyboardEvent<HTMLInputElement>) => {
+    const handleKeyDown = (e: KeyboardEvent<HTMLTextAreaElement>) => {
         if (e.key === "Enter" && !e.shiftKey) {
+            e.preventDefault();
             handleSubmit(e);
         }
     };
 
     const handleBoxClick = () => {
-        inputRef.current?.focus();
+        textareaRef.current?.focus();
     };
 
     return (
@@ -52,8 +66,8 @@ export default function SearchBar({ onSearch, isLoading }: SearchBarProps) {
             <div
                 onClick={handleBoxClick}
                 className={`
-          relative flex items-center 
-          glass rounded-full 
+          relative flex items-end
+          glass rounded-2xl
           px-6 py-4
           transition-all duration-500 ease-out
           cursor-text
@@ -63,16 +77,15 @@ export default function SearchBar({ onSearch, isLoading }: SearchBarProps) {
                 {/* Search Icon */}
                 <Search
                     className={`
-            w-5 h-5 mr-4 flex-shrink-0 pointer-events-none
+            w-5 h-5 mr-4 flex-shrink-0 pointer-events-none mb-1
             transition-colors duration-300
             ${isFocused ? "text-cosmic-gold" : "text-nebula-gray"}
           `}
                 />
 
-                {/* Input */}
-                <input
-                    ref={inputRef}
-                    type="text"
+                {/* Textarea */}
+                <textarea
+                    ref={textareaRef}
                     value={query}
                     onChange={(e) => setQuery(e.target.value)}
                     onFocus={() => setIsFocused(true)}
@@ -80,12 +93,18 @@ export default function SearchBar({ onSearch, isLoading }: SearchBarProps) {
                     onKeyDown={handleKeyDown}
                     placeholder="Enter Your Precious Prompt..."
                     disabled={isLoading}
+                    rows={1}
                     className="
             flex-1 bg-transparent 
             text-star-white placeholder-nebula-gray
             text-lg outline-none
             disabled:opacity-50
+            resize-none
+            overflow-y-auto
+            max-h-[200px]
+            leading-relaxed
           "
+                    style={{ minHeight: "28px" }}
                     aria-label="Search prompt"
                 />
 
@@ -96,7 +115,7 @@ export default function SearchBar({ onSearch, isLoading }: SearchBarProps) {
                     whileHover={{ scale: 1.1 }}
                     whileTap={{ scale: 0.95 }}
                     className={`
-            ml-4 p-2 rounded-full
+            ml-4 p-2 rounded-full flex-shrink-0
             transition-all duration-300
             ${query.trim() && !isLoading
                             ? "bg-cosmic-gold text-void-black hover:bg-cosmic-gold-light"
